@@ -2,6 +2,7 @@ import pytest
 from unittest.mock import Mock
 
 from types import SimpleNamespace as SN
+from subprocess import CompletedProcess, CalledProcessError
 
 import gitprompt.main as module
 
@@ -61,7 +62,6 @@ def test_prompt(monkeypatch):
 def test_fetch(monkeypatch):
     def fake_sprun(args, **_):
         assert " ".join(args) == "git status --porcelain=v2 --branch"
-        from subprocess import CompletedProcess
 
         return CompletedProcess(args=args, returncode=0, stdout="some porcelain")
 
@@ -72,3 +72,26 @@ def test_fetch(monkeypatch):
     gp.fetch()
 
     gp.parser.parse.assert_called_once_with("some porcelain")
+
+def test_run_ok(monkeypatch):
+    def fake_sprun(args, **_):
+        return CompletedProcess(args=args, returncode=0, stdout="whatever")
+    monkeypatch.setattr("subprocess.run", fake_sprun)
+    monkeypatch.setattr(module, "PorcelainV2Parser", FakeParser)
+
+    gp = module.GitPrompt(config)
+    prompt = gp.run()
+
+    assert prompt != ""
+
+def test_run_nogit(monkeypatch):
+    def fake_sprun(args, **_):
+        raise CalledProcessError(returncode=128, cmd=args)
+    monkeypatch.setattr("subprocess.run", fake_sprun)
+    monkeypatch.setattr(module, "PorcelainV2Parser", Mock(autospec=True))
+
+    gp = module.GitPrompt(config)
+    prompt = gp.run()
+
+    assert prompt == ""
+    gp.parser.parse.assert_not_called()

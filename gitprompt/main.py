@@ -10,13 +10,16 @@ class GitPrompt:
         self.parser = PorcelainV2Parser()
 
     def run(self):
-        self.fetch()
+        try:
+            self.fetch()
+        except subprocess.CalledProcessError as e:
+            return ""
         return self.prompt()
 
     def fetch(self):
         args = ["git", "status", "--porcelain=v2", "--branch"]
         proc = subprocess.run(
-            args, shell=False, capture_output=True, timeout=1, text=True,
+            args, shell=False, capture_output=True, timeout=1, text=True, check=True,
         )
         self.parser.parse(proc.stdout)
 
