@@ -41,7 +41,7 @@ gitprompt_hook_precmd() {
 }
 
 gitprompt_update() {
-    __GITPROMPT_CURRENT_STATUS=$(PYTHONPATH=$PYTHONPATH:$__GITPROMPT_DIR python -m gitprompt)
+    __GITPROMPT_CURRENT_STATUS=$(PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}$__GITPROMPT_DIR python -m gitprompt)
 }
 
 gitprompt_status() {
