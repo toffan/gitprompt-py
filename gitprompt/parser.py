@@ -93,7 +93,7 @@ class DirectoryParser:
             raise ValueError(f"unknown format {hint!r}")
 
     def update_xstaged(self, line: str):
-        match = re.match("^(?P<X>[.MARCD])(?P<Y>[.MARCD])", line)
+        match = re.match("^(?P<X>[.MTARCD])(?P<Y>[.MTARCD])", line)
         if not match:
             raise ValueError(f"unparsable value {line!r}")
         if match.group("X") != ".":
