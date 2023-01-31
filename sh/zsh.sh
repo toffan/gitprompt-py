@@ -28,7 +28,7 @@ gitprompt_hook_preexec() {
         # Whitelist of common commands that do not to modify the current
         # worktree when used by a benevolent user. As a result, do not update
         # git status after them.
-        "ls "*|"tree "*|"cat "*|"less "*|"wc "*|"grep "*|"ag "*|"man "*|"mkdir "*) ;;
+        "ls "*|"tree "*|"cat "*|"less "*|"wc "*|"grep "*|"ag "*|"rg "*|"man "*|"mkdir "*) ;;
         *) __GITPROMPT_UPDATE=1;;
     esac
 }
