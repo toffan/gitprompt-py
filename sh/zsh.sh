@@ -44,7 +44,7 @@ gitprompt_update() {
     if [[ $GITPROMPT_ENABLED != 1 ]]; then
         __GITPROMPT_CURRENT_STATUS=""
     else
-        __GITPROMPT_CURRENT_STATUS=$(PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}$__GITPROMPT_DIR python -m gitprompt)
+        __GITPROMPT_CURRENT_STATUS=$(PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}$__GITPROMPT_DIR python -P -m gitprompt)
     fi
 }
 

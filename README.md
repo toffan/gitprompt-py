@@ -3,9 +3,6 @@
 *Summarize the status of the current git working tree in the prompt. Python
 version.*
 
-WARNING: this script may result in arbitrary code exec if executed
-from the wrong directory (as well as any python script).
-Please `unset GITPROMPT_ENABLED` before entering an untrusted directory.
 
 ## Installation
 
@@ -13,7 +10,7 @@ Clone this repository and grant read permission.
 
 ### Dependencies
 
-- python >= 3.7.0
+- python >= 3.11.0
 - zsh
 
 ### Usage
@@ -34,6 +31,8 @@ GITPROMPT_THEME_UNTRACKED="%{$fg[yellow]%}>"
 # Setup prompt
 PROMPT='%~ $(gitprompt_status)%# '
 ```
+
+You may dynamically disable *gitprompt* with `unset GITPROMPT_ENABLED`.
 
 ## About
 
