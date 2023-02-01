@@ -3,6 +3,10 @@
 *Summarize the status of the current git working tree in the prompt. Python
 version.*
 
+WARNING: this script may result in arbitrary code exec if executed
+from the wrong directory (as well as any python script).
+Please `unset GITPROMPT_ENABLED` before entering an untrusted directory.
+
 ## Installation
 
 Clone this repository and grant read permission.

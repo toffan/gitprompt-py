@@ -1,4 +1,4 @@
-# To install source this file from your .zshrc file
+# To install, source this file from your .zshrc file
 # and use the gitprompt_status function
 
 
@@ -41,7 +41,11 @@ gitprompt_hook_precmd() {
 }
 
 gitprompt_update() {
-    __GITPROMPT_CURRENT_STATUS=$(PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}$__GITPROMPT_DIR python -m gitprompt)
+    if [[ $GITPROMPT_ENABLED != 1 ]]; then
+        __GITPROMPT_CURRENT_STATUS=""
+    else
+        __GITPROMPT_CURRENT_STATUS=$(PYTHONPATH=${PYTHONPATH:+$PYTHONPATH:}$__GITPROMPT_DIR python -m gitprompt)
+    fi
 }
 
 gitprompt_status() {
@@ -63,3 +67,5 @@ export GITPROMPT_THEME_UNTRACKED="%{$fg[red]%}?"
 export GITPROMPT_THEME_CHANGED="%{$fg[red]%}!"
 export GITPROMPT_THEME_STAGED="%{$fg[cyan]%}✔"
 export GITPROMPT_THEME_CLEAN="%{$fg_bold[green]%}✔%{$reset_color%}"
+
+export GITPROMPT_ENABLED=1
