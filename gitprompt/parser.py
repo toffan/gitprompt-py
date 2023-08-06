@@ -38,7 +38,7 @@ class BranchParser:
 
     def __init__(self):
         self.oid = None
-        self.head = None
+        self._head = None
         self.upstream = None
         self.ahead = 0
         self.behind = 0
@@ -51,6 +51,17 @@ class BranchParser:
             raise ValueError(f"unparsable line {line!r}")
         except KeyError:
             raise ValueError(f"unknown attribute {hint!r}")
+
+    @property
+    def head(self):
+        return self._head
+
+    @head.setter
+    def head(self, value: str):
+        if value == "(detached)":
+            self._head = None
+        else:
+            self._head = value
 
     @property
     def ab(self):
