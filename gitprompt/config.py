@@ -1,8 +1,8 @@
 import os
+from typing import Self
 
 
 class Theme:
-
     _ENV = {
         "prefix": "PREFIX",
         "suffix": "SUFFIX",
@@ -31,7 +31,7 @@ class Theme:
         unmerged: str = "",
         untracked: str = "",
         clean: str = "",
-    ):
+    ) -> None:
         self.suffix = suffix
         self.prefix = prefix
         self.branch = branch
@@ -45,14 +45,14 @@ class Theme:
         self.clean = clean
 
     @property
-    def rst(self):
+    def rst(self) -> str:
         # The following does not work because for some reasons the `$reset_color` is not
         # extended. However, manually extending it produces the expected result.
         # return "%{$reset_color%}"
         return b"%{\x1b[00m%}".decode()
 
     @classmethod
-    def from_env(cls, prefix="GITPROMPT_THEME_"):
+    def from_env(cls, prefix="GITPROMPT_THEME_") -> Self:
         kwargs = {}
         for arg, env in cls._ENV.items():
             try:
@@ -63,9 +63,9 @@ class Theme:
 
 
 class Config:
-    def __init__(self, theme: Theme):
+    def __init__(self, theme: Theme) -> None:
         self.theme = theme
 
     @classmethod
-    def from_env(cls):
+    def from_env(cls) -> Self:
         return cls(theme=Theme.from_env())

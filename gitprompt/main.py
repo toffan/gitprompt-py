@@ -5,25 +5,30 @@ from .config import Config
 
 
 class GitPrompt:
-    def __init__(self, config: Config):
+    def __init__(self, config: Config) -> None:
         self.config = config
         self.parser = PorcelainV2Parser()
 
-    def run(self):
+    def run(self) -> str:
         try:
             self.fetch()
         except subprocess.CalledProcessError as e:
             return ""
         return self.prompt()
 
-    def fetch(self):
+    def fetch(self) -> None:
         args = ["git", "status", "--porcelain=v2", "--branch"]
         proc = subprocess.run(
-            args, shell=False, capture_output=True, timeout=1, text=True, check=True,
+            args,
+            shell=False,
+            capture_output=True,
+            timeout=1,
+            text=True,
+            check=True,
         )
         self.parser.parse(proc.stdout)
 
-    def prompt(self):
+    def prompt(self) -> str:
         th = self.config.theme
         gbr = self.parser.branch
         gd = self.parser.directory

@@ -3,14 +3,13 @@ import re
 
 class PorcelainV2Parser:
 
-    """ Parse status information from a porcelain v2 status
-    """
+    """Parse status information from a porcelain v2 status"""
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.branch = BranchParser()
         self.directory = DirectoryParser()
 
-    def parse(self, porcelain: str):
+    def parse(self, porcelain: str) -> None:
         lines = PorcelainV2Parser.clean(porcelain)
         for line in lines:
             if line.startswith("# "):
@@ -19,15 +18,14 @@ class PorcelainV2Parser:
                 self.directory.update(line.strip())
 
     @staticmethod
-    def clean(text: str):
+    def clean(text: str) -> list[str]:
         stripped = (line.strip() for line in text.splitlines())
         return [line for line in stripped if line]
 
 
 class BranchParser:
 
-    """ Parse branch information from a porcelain v2 status
-    """
+    """Parse branch information from a porcelain v2 status"""
 
     ATTR = {
         "branch.oid": "oid",
@@ -36,39 +34,39 @@ class BranchParser:
         "branch.ab": "ab",
     }
 
-    def __init__(self):
+    def __init__(self) -> None:
         self.oid = None
         self._head = None
         self.upstream = None
         self.ahead = 0
         self.behind = 0
 
-    def update(self, line: str):
+    def update(self, line: str) -> None:
         try:
             hint, rhs = line.split(maxsplit=1)
             setattr(self, self.ATTR[hint], rhs)
         except ValueError:
             raise ValueError(f"unparsable line {line!r}")
-        except KeyError:
-            raise ValueError(f"unknown attribute {hint!r}")
+        except KeyError as e:
+            raise ValueError(f"unknown attribute {e!r}")
 
     @property
-    def head(self):
+    def head(self) -> str | None:
         return self._head
 
     @head.setter
-    def head(self, value: str):
+    def head(self, value: str) -> None:
         if value == "(detached)":
             self._head = None
         else:
             self._head = value
 
     @property
-    def ab(self):
+    def ab(self) -> str:
         return f"+{self.ahead} -{self.behind}"
 
     @ab.setter
-    def ab(self, line: str):
+    def ab(self, line: str) -> None:
         match = re.match(r"\+(?P<ahead>\d+) -(?P<behind>\d+)", line)
         if not match:
             raise ValueError(f"unparsable value {line!r}")
@@ -78,8 +76,7 @@ class BranchParser:
 
 class DirectoryParser:
 
-    """ Parse directory information from a porcelain v2 status
-    """
+    """Parse directory information from a porcelain v2 status"""
 
     UPDATE_FCT = {
         "1": "update_xstaged",
@@ -100,10 +97,10 @@ class DirectoryParser:
             getattr(self, self.UPDATE_FCT[hint])(rhs)
         except ValueError:
             raise ValueError(f"unparsable line {line!r}")
-        except KeyError:
-            raise ValueError(f"unknown format {hint!r}")
+        except KeyError as e:
+            raise ValueError(f"unknown format {e!r}")
 
-    def update_xstaged(self, line: str):
+    def update_xstaged(self, line: str) -> None:
         match = re.match("^(?P<X>[.MTARCD])(?P<Y>[.MTARCD])", line)
         if not match:
             raise ValueError(f"unparsable value {line!r}")
@@ -112,8 +109,8 @@ class DirectoryParser:
         if match.group("Y") != ".":
             self.unstaged += 1
 
-    def update_unmerged(self, line: str):
+    def update_unmerged(self, line: str) -> None:
         self.unmerged += 1
 
-    def update_untracked(self, line: str):
+    def update_untracked(self, line: str) -> None:
         self.untracked += 1
