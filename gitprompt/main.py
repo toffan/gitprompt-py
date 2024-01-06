@@ -41,6 +41,7 @@ class GitPrompt:
         gbr = self.parser.branch
         gd = self.parser.directory
 
+        assert gbr.oid is not None, "Invalid parser state"
         branch = (
             f"{th.branch}{gbr.head or gbr.oid[:8]}{th.rst}"
             + (f"{th.behind}{gbr.behind}{th.rst}" if gbr.behind != 0 else "")
