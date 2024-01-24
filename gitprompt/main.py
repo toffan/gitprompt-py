@@ -1,7 +1,12 @@
 import subprocess
+import sys
 
-from .parser import PorcelainV2Parser
 from .config import Config
+from .parser import PorcelainV2Parser
+
+
+def eprint(*args, **kwargs) -> None:
+    print(*args, file=sys.stderr, **kwargs)
 
 
 class GitPrompt:
@@ -13,6 +18,9 @@ class GitPrompt:
         try:
             self.fetch()
         except subprocess.CalledProcessError as e:
+            return ""
+        except subprocess.TimeoutExpired as e:
+            eprint('gitprompt timed out. Run "git status" manually.')
             return ""
         return self.prompt()
 
